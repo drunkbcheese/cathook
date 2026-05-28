@@ -340,7 +340,8 @@ struct Visuals {
       legacy_ticks = 1u << 0,
       spectators = 1u << 2,
       keybinds = 1u << 3,
-      tickbase = 1u << 4
+      tickbase = 1u << 4,
+      crit_hack = 1u << 5
     };
 
     uint32_t enabled_mask = spectators | keybinds | tickbase;
@@ -350,6 +351,8 @@ struct Visuals {
     float legacy_ticks_y = 140.0f;
     float keybinds_x = 24.0f;
     float keybinds_y = 232.0f;
+    float crit_hack_x = 24.0f;
+    float crit_hack_y = 320.0f;
   } indicators;
 
   struct Removals {
@@ -647,6 +650,13 @@ struct Debug {
   bool insider_settings_unlocked = false;
 };
 
+struct crit_hack_config {
+  bool enabled = false;
+  struct button key = {.button = SDLK_UNKNOWN};
+  bool always_melee = false;
+  bool avoid_random = false;
+};
+
 struct Config {
   Aim aimbot;
   backtrack_config backtrack;
@@ -657,6 +667,7 @@ struct Config {
   Visuals visuals;
   Misc misc;
   Debug debug;
+  crit_hack_config crithack;
 };
 
 #if defined(__GNUC__) || defined(__clang__)

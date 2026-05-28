@@ -22,6 +22,7 @@ V  o o  V  file: src/core/hooks/fire_event_client_side.cpp
 #include "features/automation/navbot/navbot_controller.hpp"
 #include "features/combat/aimbot/resolver.hpp"
 #include "features/visuals/hitmarker.hpp"
+namespace crit_hack { void on_game_event(GameEvent* event); }
 
 #include <cfloat>
 
@@ -31,6 +32,8 @@ bool fire_event_client_side_hook(void* me, GameEvent* event) {
   if (event == nullptr) {
     return fire_event_client_side_original(me, event);
   }
+
+  crit_hack::on_game_event(event);
 
   cat_ipc::client::on_game_event(event);
 

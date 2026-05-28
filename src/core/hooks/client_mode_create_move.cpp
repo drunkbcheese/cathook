@@ -114,6 +114,10 @@ static bool should_run_taunt_slide(Player* localplayer) {
   return localplayer->in_cond(TF_COND_TAUNTING) && localplayer->allow_move_during_taunt();
 }
 
+namespace crit_hack {
+  void on_create_move(user_cmd* cmd);
+}
+
 static bool run_move_features(user_cmd* user_cmd) {
   aimbot::clear_frame_target();
   backtrack::on_create_move(user_cmd);
@@ -164,6 +168,8 @@ static bool run_move_features(user_cmd* user_cmd) {
   end_engine_prediction();
 
   const bool moonwalk_psilent = !menu_movement_blocked && moonwalk_create_move(user_cmd);
+
+  crit_hack::on_create_move(user_cmd);
 
   return aimbot_result.psilent_command || moonwalk_psilent;
 }

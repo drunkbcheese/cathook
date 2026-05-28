@@ -9,6 +9,7 @@
 #include <dlfcn.h>
 
 #include "MD5/MD5.hpp"
+#include "features/combat/random_crits/crit_hack.hpp"
 #include "core/shared/sigs.hpp"
 #include "libsigscan/libsigscan.h"
 
@@ -157,7 +158,8 @@ inline int hitscan_spread_seed(user_cmd* user_cmd) {
     return 0;
   }
 
-  return (MD5_PseudoRandom(static_cast<unsigned int>(user_cmd->command_number)) & INT_MAX) & 255;
+  const int cmd_num = crit_hack::predict_command_number(user_cmd);
+  return (MD5_PseudoRandom(static_cast<unsigned int>(cmd_num)) & INT_MAX) & 255;
 }
 
 inline bool hitscan_spread_offset(user_cmd* user_cmd, int pellet_index, float spread, Vec3* offset_out) {
@@ -366,7 +368,8 @@ inline Vec3 projectile_random_angle_offset(Player* localplayer, Weapon* weapon, 
     return Vec3{};
   }
 
-  const int command_seed = MD5_PseudoRandom(static_cast<unsigned int>(user_cmd->command_number)) & INT_MAX;
+  const int cmd_num = crit_hack::predict_command_number(user_cmd);
+  const int command_seed = MD5_PseudoRandom(static_cast<unsigned int>(cmd_num)) & INT_MAX;
   random_seed(seed_file_line_hash(command_seed, "SelectWeightedSequence", 0));
   for (int index = 0; index < 6; ++index) {
     random_float(0.0f, 1.0f);

@@ -85,6 +85,7 @@ V  o o  V  file: src/cathook.cpp
 #include "features/combat/backtrack/backtrack.cpp"
 #include "features/combat/tickbase/tickbase.cpp"
 #include "features/combat/anti_aim/anti_aim.cpp"
+#include "features/combat/random_crits/crit_hack.cpp"
 #include "core/hooks/cl_read_packets.cpp"
 #include "core/hooks/cl_move.cpp"
 #include "core/hooks/client_mode_create_move.cpp"

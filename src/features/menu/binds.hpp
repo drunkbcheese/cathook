@@ -361,6 +361,7 @@ inline void register_builtin_button_targets() {
   button_targets_registered() = true;
 
   register_button_target("aimbot.key", "Aimbot", &config.aimbot.key, indicator_kind::aimbot, true);
+  register_button_target("crithack.key", "Force crits key", &config.crithack.key, indicator_kind::aimbot, true);
   register_button_target("misc.exploits.doubletap_key", "Doubletap", &config.misc.exploits.doubletap_key, indicator_kind::value, true);
   register_button_target("misc.exploits.warp_key", "Warp", &config.misc.exploits.warp_key, indicator_kind::value, true);
 }

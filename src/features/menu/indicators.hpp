@@ -15,6 +15,7 @@ V  o o  V  file: src/features/menu/indicators.hpp
 #include "config.hpp"
 #include "binds.hpp"
 #include "menu.hpp"
+#include "features/combat/random_crits/crit_hack.hpp"
 
 #include "features/combat/aimbot/aimbot_debug.hpp"
 #include "features/combat/tickbase/tickbase.hpp"
@@ -41,7 +42,8 @@ enum class section_kind
   tickbase,
   keybinds,
   spectators,
-  aimbot_debug
+  aimbot_debug,
+  crit_hack
 };
 
 struct section_spec
@@ -170,6 +172,15 @@ inline auto build_sections() -> std::vector<section_spec>
   std::vector<section_spec> sections{};
   sections.reserve(4);
 
+  if (has_indicator(Visuals::Indicators::crit_hack) && (menu_focused || config.crithack.enabled)) {
+    sections.push_back({
+      .kind = section_kind::crit_hack,
+      .width = 180.0f,
+      .height = 29.0f,
+      .position = ImVec2(config.visuals.indicators.crit_hack_x, config.visuals.indicators.crit_hack_y)
+    });
+  }
+
   if (has_indicator(Visuals::Indicators::tickbase) && (menu_focused || config.misc.exploits.tickbase)) {
     sections.push_back({
       .kind = section_kind::tickbase,
@@ -228,6 +239,8 @@ struct section_position_refs
 inline auto section_drag_position(section_kind kind) -> section_position_refs
 {
   switch (kind) {
+  case section_kind::crit_hack:
+    return { .x = &config.visuals.indicators.crit_hack_x, .y = &config.visuals.indicators.crit_hack_y };
   case section_kind::tickbase:
     return { .x = &config.visuals.indicators.legacy_ticks_x, .y = &config.visuals.indicators.legacy_ticks_y };
   case section_kind::keybinds:
@@ -435,6 +448,86 @@ inline void draw_tickbase_section(ImDrawList* draw_list, const ImVec2 position)
   draw_compact_meter(draw_list, position, 180.0f, status, tick_text, progress, bar_color);
 }
 
+inline void draw_crit_hack_section(ImDrawList* draw_list, const ImVec2 position)
+{
+  auto* local = entity_list->get_localplayer();
+  if (local == nullptr || !local->is_alive() || local->is_dormant()) {
+    return;
+  }
+
+  auto* weapon = local->get_weapon();
+  if (weapon == nullptr || !crit_hack::weapon_can_crit(weapon, true)) {
+    return;
+  }
+
+  const auto stats = crit_hack::get_stats();
+  std::string left_text = "Calculating";
+  std::string right_text = "";
+  float progress = 0.0f;
+  ImU32 bar_color = IM_COL32(100, 220, 130, 255); // default ready green
+
+  if (!crit_hack::weapon_can_crit(weapon)) {
+    left_text = "Cannot crit";
+    right_text = "DISABLED";
+    bar_color = IM_COL32(200, 40, 40, 255); // dark red
+    progress = 1.0f;
+  } else {
+    if (stats.damage > 0) {
+      if (local->is_crit_boosted()) {
+        left_text = "Crit Boosted";
+        right_text = "READY";
+        bar_color = IM_COL32(100, 255, 255, 255); // cyan
+        progress = 1.0f;
+      } else if (weapon->crit_time() > global_vars->curtime) {
+        const float flTime = weapon->crit_time() - global_vars->curtime;
+        left_text = "Crits: " + std::to_string(std::max(0, stats.available)) + " / " + std::to_string(stats.potential);
+        right_text = "STREAMING";
+        bar_color = IM_COL32(100, 255, 255, 255);
+        progress = flTime / 2.0f;
+      } else if (!stats.banned || weapon->is_melee()) {
+        left_text = "Crits: " + std::to_string(std::max(0, stats.available)) + " / " + std::to_string(stats.potential);
+        
+        if (weapon->is_rapid_fire() && (local->get_tickbase() * 0.015f) < weapon->last_rapid_fire_crit_check_time() + 1.0f) {
+          const float flTime = weapon->last_rapid_fire_crit_check_time() + 1.0f - (local->get_tickbase() * 0.015f);
+          if (flTime > 0.0001f) {
+            char wait_buf[32];
+            std::snprintf(wait_buf, sizeof(wait_buf), "WAIT %.2fs", flTime);
+            right_text = wait_buf;
+            bar_color = IM_COL32(255, 150, 0, 255); // orange
+          } else {
+            right_text = "STREAMING";
+            bar_color = IM_COL32(100, 255, 255, 255);
+          }
+          progress = flTime;
+        } else if (stats.available >= stats.potential) {
+          right_text = "READY";
+          bar_color = IM_COL32(100, 220, 130, 255);
+          progress = 1.0f;
+        } else {
+          float currentBucket = weapon->crit_token_bucket();
+          int damageNeeded = static_cast<int>(std::ceil(stats.cost - currentBucket));
+          right_text = "DMG: " + std::to_string(std::max(0, damageNeeded));
+          bar_color = stats.available > 0 ? IM_COL32(100, 220, 130, 255) : IM_COL32(200, 40, 40, 255);
+          
+          static Convar* cap_cvar = nullptr;
+          if (cap_cvar == nullptr && convar_system != nullptr) {
+            cap_cvar = convar_system->find_var("tf_weapon_criticals_bucket_cap");
+          }
+          float cap = cap_cvar ? cap_cvar->get_float() : 1000.0f;
+          progress = currentBucket / cap;
+        }
+      } else {
+        left_text = "DMG: " + std::to_string(static_cast<int>(std::ceil(stats.damage_till_flip)));
+        right_text = "BANNED";
+        bar_color = IM_COL32(200, 40, 40, 255);
+        progress = 0.2f;
+      }
+    }
+  }
+
+  draw_compact_meter(draw_list, position, 180.0f, left_text, right_text, progress, bar_color);
+}
+
 inline void draw_keybind_section(ImDrawList* draw_list, const ImVec2 position)
 {
   const std::vector<cat_bind::indicator_row> rows = collect_keybind_rows();
@@ -551,6 +644,9 @@ static void draw_game_indicators()
   ImDrawList* draw_list = ImGui::GetForegroundDrawList();
   for (const section_spec& section : sections) {
     switch (section.kind) {
+    case section_kind::crit_hack:
+      draw_crit_hack_section(draw_list, section.position);
+      break;
     case section_kind::tickbase:
       draw_tickbase_section(draw_list, section.position);
       break;
