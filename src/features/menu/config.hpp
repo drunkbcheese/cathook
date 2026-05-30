@@ -520,6 +520,7 @@ struct Misc {
     bool pure_bypass = true;
     bool cheats_bypass = false;
     bool vac_bypass = false;
+    bool local_auth_bypass_tests = false;
     bool network_fix = false;
     bool tickbase = false;
     bool tickbase_recharge = true;
@@ -769,6 +770,7 @@ inline void enforce_insider_settings_lock(Config& cfg)
     return;
   }
 
+  cfg.misc.exploits.local_auth_bypass_tests = false;
 }
 
 inline void reset_insider_settings_session(Config& cfg)

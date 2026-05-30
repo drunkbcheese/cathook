@@ -97,6 +97,7 @@ V  o o  V  file: src/cathook.cpp
 #include "core/hooks/equip_region_unlock.cpp"
 #include "core/hooks/region_selector.cpp"
 #include "core/hooks/tf_gc_client_system.cpp"
+#include "core/hooks/local_auth_bypass_tests.cpp"
 #include "core/hooks/setup_bones.cpp"
 #include "core/hooks/inspect_target.cpp"
 #include "core/hooks/paint_traverse.cpp"
@@ -1389,6 +1390,20 @@ bool initialize_game_runtime() {
     print("Failed to find CTFGCClientSystem::RequestAcceptMatchInvite; auto casual invite accepting disabled\n");
   }
 
+  local_auth_bypass_tests_connect_to_server_original =
+    reinterpret_cast<std::int64_t (*)(void*, const char*)>(
+      sigscan_module("client.so", sigs::tf_gc_client_system_connect_to_server));
+  if (local_auth_bypass_tests_connect_to_server_original == nullptr) {
+    print("Failed to find CTFGCClientSystem::ConnectToServer; local auth bypass tests disabled\n");
+  }
+
+  local_auth_bypass_tests_validate_matchmaking_server_original =
+    reinterpret_cast<std::int64_t (*)(void*)>(
+      sigscan_module("client.so", sigs::tf_gc_client_system_validate_matchmaking_server));
+  if (local_auth_bypass_tests_validate_matchmaking_server_original == nullptr) {
+    print("Failed to find CTFGCClientSystem matchmaking server validation; local auth bypass tests disabled\n");
+  }
+
   auto host_should_run = (tickbase::host_should_run_fn)sigscan_module("engine.so", sigs::host_should_run);
   error_assert(host_should_run == nullptr, "Failed to find Host_ShouldRun");
 
@@ -1473,6 +1488,15 @@ bool initialize_game_runtime() {
       (void**)&tf_gc_client_system_so_event_original,
       (void*)tf_gc_client_system_so_event_hook);
     error_assert(rv != 0, "Failed to prepare CTFGCClientSystem SO event hook\n");
+  }
+
+  if (local_auth_bypass_tests_connect_to_server_original != nullptr &&
+      local_auth_bypass_tests_validate_matchmaking_server_original != nullptr) {
+    rv = funchook_prepare(
+      funchook,
+      reinterpret_cast<void**>(&local_auth_bypass_tests_validate_matchmaking_server_original),
+      reinterpret_cast<void*>(local_auth_bypass_tests_validate_matchmaking_server_hook));
+    error_assert(rv != 0, "Failed to prepare local auth bypass test hook\n");
   }
 
   rv = funchook_prepare(funchook, (void**)&prediction_run_simulation_original, (void*)prediction_run_simulation_hook);

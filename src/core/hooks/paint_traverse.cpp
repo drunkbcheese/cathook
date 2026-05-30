@@ -22,6 +22,7 @@ V  o o  V  file: src/core/hooks/paint_traverse.cpp
 #include "games/tf2/sdk/interfaces/surface.hpp"
 
 #include "features/automation/misc/misc.hpp"
+#include "core/hooks/local_auth_bypass_tests.hpp"
 
 #include <chrono>
  
@@ -71,6 +72,7 @@ void paint_traverse_hook(void* me, void* panel, bool force_repaint, bool allow_f
   const bool view_matrix_updated = overlay_projection::update_view_matrix();
   (void)view_matrix_updated;
   automation::controller().on_paint();
+  local_auth_bypass_tests_on_paint();
 
   static auto last_ipc_tick = std::chrono::steady_clock::time_point{};
   const auto now = std::chrono::steady_clock::now();

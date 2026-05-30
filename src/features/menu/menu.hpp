@@ -2409,6 +2409,9 @@ static void draw_exploits_content() {
     cat_menu::checkbox("Pure bypass", &config.misc.exploits.pure_bypass);
     cat_menu::checkbox("Cheats bypass", &config.misc.exploits.cheats_bypass);
     cat_menu::checkbox("VAC bypass", &config.misc.exploits.vac_bypass);
+    if (config.debug.insider_settings_unlocked) {
+      cat_menu::checkbox("Local auth bypass tests", &config.misc.exploits.local_auth_bypass_tests);
+    }
     cat_menu::checkbox("Network fix", &config.misc.exploits.network_fix);
     cat_menu::checkbox("No engine sleep", &config.misc.exploits.no_engine_sleep);
     if (cat_menu::checkbox("Null graphics", &config.misc.exploits.null_graphics)) {
@@ -2505,6 +2508,9 @@ static void draw_misc_content() {
       cat_menu::checkbox("Pure bypass", &config.misc.exploits.pure_bypass);
       cat_menu::checkbox("Cheats bypass", &config.misc.exploits.cheats_bypass);
       cat_menu::checkbox("VAC bypass", &config.misc.exploits.vac_bypass);
+      if (config.debug.insider_settings_unlocked) {
+        cat_menu::checkbox("Local auth bypass tests", &config.misc.exploits.local_auth_bypass_tests);
+      }
       cat_menu::checkbox("Network fix", &config.misc.exploits.network_fix);
       cat_menu::checkbox("Tickbase", &config.misc.exploits.tickbase);
       cat_menu::checkbox("Recharge", &config.misc.exploits.tickbase_recharge);

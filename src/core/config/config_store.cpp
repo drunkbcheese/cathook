@@ -351,6 +351,7 @@ void config_store::import_config(const Config& config)
     set_bool("misc.exploits.pure_bypass", config.misc.exploits.pure_bypass);
     set_bool("misc.exploits.cheats_bypass", config.misc.exploits.cheats_bypass);
     set_bool("misc.exploits.vac_bypass", config.misc.exploits.vac_bypass);
+    set_bool("misc.exploits.local_auth_bypass_tests", config.misc.exploits.local_auth_bypass_tests);
     set_bool("misc.exploits.network_fix", config.misc.exploits.network_fix);
     set_bool("misc.exploits.tickbase", config.misc.exploits.tickbase);
     set_bool("misc.exploits.tickbase_recharge", config.misc.exploits.tickbase_recharge);
@@ -770,6 +771,9 @@ void config_store::export_config(Config& config) const
     config.misc.exploits.pure_bypass = get_bool("misc.exploits.pure_bypass", config.misc.exploits.pure_bypass);
     config.misc.exploits.cheats_bypass = get_bool("misc.exploits.cheats_bypass", config.misc.exploits.cheats_bypass);
     config.misc.exploits.vac_bypass = get_bool("misc.exploits.vac_bypass", config.misc.exploits.vac_bypass);
+    config.misc.exploits.local_auth_bypass_tests = get_bool(
+        "misc.exploits.local_auth_bypass_tests",
+        config.misc.exploits.local_auth_bypass_tests);
     config.misc.exploits.network_fix = get_bool("misc.exploits.network_fix", config.misc.exploits.network_fix);
     config.misc.exploits.tickbase = get_bool("misc.exploits.tickbase", config.misc.exploits.tickbase);
     config.misc.exploits.tickbase_recharge = get_bool(
