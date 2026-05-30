@@ -1388,6 +1388,7 @@ bool initialize_game_runtime() {
   if (tf_gc_client_system_request_accept_match_invite == nullptr) {
     print("Failed to find CTFGCClientSystem::RequestAcceptMatchInvite; auto casual invite accepting disabled\n");
   }
+  initialize_tf_gc_client_system_patches();
 
   auto host_should_run = (tickbase::host_should_run_fn)sigscan_module("engine.so", sigs::host_should_run);
   error_assert(host_should_run == nullptr, "Failed to find Host_ShouldRun");

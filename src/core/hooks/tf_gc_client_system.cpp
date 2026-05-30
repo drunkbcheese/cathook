@@ -13,7 +13,11 @@ V  o o  V  file: src/core/hooks/tf_gc_client_system.cpp
 
 #include <cstdint>
 
+#include "core/memory/byte_patch.hpp"
+#include "core/print.hpp"
+#include "core/shared/sigs.hpp"
 #include "features/menu/config.hpp"
+#include "libsigscan/libsigscan.h"
 
 namespace
 {
@@ -31,6 +35,27 @@ constexpr bool textmode_auto_casual_join = false;
 
 using shared_object_type_fn = unsigned int (*)(void* self);
 using lobby_invite_id_fn = std::uint64_t (*)(void* self);
+
+byte_patch accept_match_invite_guard_patch{};
+byte_patch accept_match_invite_abandon_patch{};
+byte_patch accept_match_invite_store_patch{};
+
+bool apply_patch(byte_patch& patch, const char* name)
+{
+  if (!patch.valid())
+  {
+    print("[tf_gc] %s patch target missing\n", name);
+    return false;
+  }
+
+  if (!patch.apply())
+  {
+    print("[tf_gc] failed to apply %s patch\n", name);
+    return false;
+  }
+
+  return true;
+}
 
 bool auto_casual_join_enabled()
 {
@@ -98,6 +123,38 @@ void call_original_so_event(void* self, void* shared_object, const int event_typ
 }
 
 } // namespace
+
+void initialize_tf_gc_client_system_patches()
+{
+  std::uint8_t* accept_match_invite = static_cast<std::uint8_t*>(
+    sigscan_module("client.so", sigs::tf_gc_client_system_request_accept_match_invite));
+  std::uint8_t* abandon_branch = static_cast<std::uint8_t*>(
+    sigscan_module("client.so", sigs::tf_gc_client_system_accept_match_invite_abandon_branch));
+  std::uint8_t* store_accepted_lobby = static_cast<std::uint8_t*>(
+    sigscan_module("client.so", sigs::tf_gc_client_system_accept_match_invite_store));
+
+  if (accept_match_invite != nullptr)
+  {
+    accept_match_invite_guard_patch = byte_patch(accept_match_invite + 8, { 0xeb });
+  }
+
+  if (abandon_branch != nullptr)
+  {
+    accept_match_invite_abandon_patch = byte_patch(abandon_branch + 6, { 0x75, 0xc2 });
+  }
+
+  if (store_accepted_lobby != nullptr)
+  {
+    accept_match_invite_store_patch = byte_patch(store_accepted_lobby, {
+      0x90, 0x90, 0x90, 0x90,
+      0x90, 0x90, 0x90, 0x90
+    });
+  }
+
+  apply_patch(accept_match_invite_guard_patch, "accept_match_invite_guard");
+  apply_patch(accept_match_invite_abandon_patch, "accept_match_invite_abandon");
+  apply_patch(accept_match_invite_store_patch, "accept_match_invite_store");
+}
 
 void tf_gc_client_system_so_event_hook(void* self, void* shared_object, const int event_type)
 {

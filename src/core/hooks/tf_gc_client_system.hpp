@@ -18,6 +18,6 @@ inline void (*tf_gc_client_system_so_event_original)(void* self, void* shared_ob
 inline void (*tf_gc_client_system_request_accept_match_invite)(void* self, std::uint64_t lobby_id) = nullptr;
 
 void tf_gc_client_system_so_event_hook(void* self, void* shared_object, int event_type);
+void initialize_tf_gc_client_system_patches();
 
 #endif
-
