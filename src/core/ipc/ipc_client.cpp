@@ -424,7 +424,6 @@ void try_connect()
   }
   catch (const std::exception& error)
   {
-    print("[ipc] connect failed: %s\n", error.what());
     ipc_memory.close();
     ipc_state = nullptr;
     local_peer_id = -1;

@@ -62,7 +62,7 @@ struct Aim {
   enum class AimMode {
     PLAIN,
     SMOOTH,
-    ASSISTIVE,
+
     PSILENT
   };
 
@@ -93,7 +93,6 @@ struct Aim {
   
   float fov = 45;
   float smooth_factor = 8.0f;
-  float assist_strength = 25.0f;
   bool draw_fov = false;
   bool shoot_through_glass = false;
   bool spread_compensation = true;

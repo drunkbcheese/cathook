@@ -193,7 +193,6 @@ void config_store::import_config(const Config& config)
     set_int("aimbot.key_mode", static_cast<int>(config.aimbot.key.mode));
     set_float("aimbot.fov", config.aimbot.fov);
     set_float("aimbot.smooth_factor", config.aimbot.smooth_factor);
-    set_float("aimbot.assist_strength", config.aimbot.assist_strength);
     set_bool("aimbot.draw_fov", config.aimbot.draw_fov);
     set_bool("aimbot.shoot_through_glass", config.aimbot.shoot_through_glass);
     set_bool("aimbot.spread_compensation", config.aimbot.spread_compensation);
@@ -535,10 +534,6 @@ void config_store::export_config(Config& config) const
     reset_button_state(config.aimbot.key);
     config.aimbot.fov = get_float("aimbot.fov", config.aimbot.fov);
     config.aimbot.smooth_factor = get_float("aimbot.smooth_factor", config.aimbot.smooth_factor);
-    config.aimbot.assist_strength = std::clamp(
-        get_float("aimbot.assist_strength", config.aimbot.assist_strength),
-        0.0f,
-        100.0f);
     config.aimbot.draw_fov = get_bool("aimbot.draw_fov", config.aimbot.draw_fov);
     config.aimbot.shoot_through_glass = get_bool("aimbot.shoot_through_glass", config.aimbot.shoot_through_glass);
     config.aimbot.spread_compensation = get_bool("aimbot.spread_compensation", config.aimbot.spread_compensation);

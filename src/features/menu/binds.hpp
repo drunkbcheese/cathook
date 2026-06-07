@@ -294,7 +294,6 @@ inline void register_builtin_targets() {
   register_target("aimbot.aim_mode", "Aim mode", reinterpret_cast<int*>(&config.aimbot.aim_mode));
   register_target("aimbot.fov", "Aim FOV", &config.aimbot.fov);
   register_target("aimbot.smooth_factor", "Smooth factor", &config.aimbot.smooth_factor);
-  register_target("aimbot.assist_strength", "Assist strength", &config.aimbot.assist_strength);
   register_target("aimbot.target_type", "Target", reinterpret_cast<int*>(&config.aimbot.target_type));
   register_target("aimbot.projectile_mode", "Projectile mode", reinterpret_cast<int*>(&config.aimbot.projectile_mode));
   register_target("aimbot.melee_walk_to_target", "Melee walk to target", &config.aimbot.melee_walk_to_target);

@@ -1324,7 +1324,7 @@ static void draw_aimbot_content() {
   const char* target_items[] = { "FOV", "Distance", "Least Health", "Most Health" };
   const char* aim_at_items[] = { "Enemies", "Buildings", "MvM robots", "Pumpkins", "Stickies" };
   const char* ignore_items[] = { "Friends", "IPC bots", "Cloaked", "Invulnerable" };
-  const char* aim_mode_items[] = { "Plain", "Smooth", "Assistive", "Psilent" };
+  const char* aim_mode_items[] = { "Plain", "Smooth", "Psilent" };
   const char* projectile_mode_items[] = { "Direct only", "Direct + splash", "Prefer splash", "Splash only" };
   const char* hitbox_items[] = { "Head", "Body", "Pelvis", "Arms", "Legs" };
   const char* projectile_hitbox_items[] = { "Auto", "Head", "Body", "Pelvis", "Arms", "Legs" };
@@ -1369,7 +1369,6 @@ static void draw_aimbot_content() {
     cat_menu::combo("Aim mode", (int*)&config.aimbot.aim_mode, aim_mode_items, IM_ARRAYSIZE(aim_mode_items));
     cat_menu::slider_float("Aim FOV", &config.aimbot.fov, 0.0f, 180.0f, "%.0f deg");
     cat_menu::slider_float("Smooth factor", &config.aimbot.smooth_factor, 1.0f, 30.0f, "%.1f");
-    cat_menu::slider_float("Assist strength", &config.aimbot.assist_strength, 0.0f, 100.0f, "%.0f%%");
     cat_menu::slider_int("Resolver yaws", &config.aimbot.resolver_max_yaws, 4, 24);
   });
   cat_menu::flow_panel("Target selection", 1, 214.0f, [&]() {

@@ -1288,8 +1288,7 @@ inline float aimbot_candidate_motion_scale(const aimbot_candidate& candidate) {
 }
 
 inline bool aimbot_mode_uses_visible_steering() {
-  return config.aimbot.aim_mode == Aim::AimMode::SMOOTH ||
-         config.aimbot.aim_mode == Aim::AimMode::ASSISTIVE;
+  return config.aimbot.aim_mode == Aim::AimMode::SMOOTH;
 }
 
 inline float aimbot_projectile_visible_settle_fov(const aimbot_candidate& candidate) {
@@ -1303,25 +1302,6 @@ inline float aimbot_projectile_visible_settle_fov(const aimbot_candidate& candid
   const float lead_extra = std::clamp(candidate.projectile_intercept_time * 0.8f, 0.0f, 1.5f);
   const float miss_extra = std::clamp(candidate.projectile_miss_distance / 32.0f, 0.0f, 1.0f);
   return std::clamp(1.25f + splash_extra + lead_extra + miss_extra, 1.25f, 5.0f);
-}
-
-inline float aimbot_assist_strength(const Vec3& original_view_angles,
-  const Vec3& target_view_angles,
-  float motion_scale = 1.0f) {
-  const float assist_strength = std::clamp(config.aimbot.assist_strength / 100.0f, 0.0f, 1.0f);
-  if (assist_strength <= 0.0f) {
-    return 0.0f;
-  }
-
-  const float aim_fov = aimbot_fov_limit(1.0f, 1.0f);
-  const float fov_ratio = std::clamp(aimbot_calculate_fov(target_view_angles, original_view_angles) / aim_fov, 0.0f, 1.0f);
-  const float close_ratio = 1.0f - fov_ratio;
-  const float curve = std::clamp(1.0f - (fov_ratio * fov_ratio), 0.05f, 1.0f);
-  const float close_boost = std::clamp(0.35f + (close_ratio * 0.65f), 0.05f, 1.0f);
-  return std::clamp(
-    assist_strength * curve * close_boost * std::clamp(motion_scale, 0.75f, 1.45f),
-    0.0f,
-    1.0f);
 }
 
 inline Vec3 aimbot_step_towards_angles(const Vec3& source_angles, const Vec3& target_angles, float max_step) {
@@ -1374,83 +1354,6 @@ inline Vec3 aimbot_apply_smooth_angles(const Vec3& source_view_angles,
   return aimbot_step_towards_angles(source_view_angles, target_view_angles, step);
 }
 
-inline Vec3 aimbot_apply_assistive_angles(const Vec3& source_view_angles,
-  const Vec3& target_view_angles,
-  const Vec3& last_input_angles,
-  const bool has_last_input_angles,
-  float motion_scale = 1.0f) {
-  const Vec3 aim_delta = aimbot_normalize_angle_delta(target_view_angles, source_view_angles);
-  const float aim_delta_length = std::hypot(aim_delta.x, aim_delta.y);
-  if (aim_delta_length <= 0.001f) {
-    return aimbot_clamp_angles(target_view_angles);
-  }
-
-  const float strength = aimbot_assist_strength(source_view_angles, target_view_angles, motion_scale);
-  if (strength <= 0.0f) {
-    return source_view_angles;
-  }
-
-  const float settle_fov = std::min(aimbot_fov_limit(0.15f, 1.5f), 6.0f);
-  const float tick_interval = global_vars != nullptr && global_vars->interval_per_tick > 0.0f
-    ? global_vars->interval_per_tick
-    : TICK_INTERVAL;
-  const auto settle_towards_target = [&]() -> Vec3 {
-    if (aim_delta_length > settle_fov) {
-      return source_view_angles;
-    }
-
-    const float settle_speed = std::lerp(24.0f, 130.0f, strength) * std::clamp(motion_scale, 0.75f, 1.65f);
-    return aimbot_step_towards_angles(source_view_angles, target_view_angles, settle_speed * tick_interval);
-  };
-
-  if (!has_last_input_angles) {
-    return settle_towards_target();
-  }
-
-  const Vec3 mouse_delta = aimbot_normalize_angle_delta(source_view_angles, last_input_angles);
-  const Vec3 target_delta = aimbot_normalize_angle_delta(target_view_angles, last_input_angles);
-  const float mouse_delta_length = std::hypot(mouse_delta.x, mouse_delta.y);
-  const float target_delta_length = std::hypot(target_delta.x, target_delta.y);
-  if (target_delta_length <= 0.0001f) {
-    return aimbot_clamp_angles(target_view_angles);
-  }
-
-  if (mouse_delta_length <= 0.0001f) {
-    return settle_towards_target();
-  }
-
-  const float alignment = ((mouse_delta.x * target_delta.x) + (mouse_delta.y * target_delta.y)) /
-    std::max(mouse_delta_length * target_delta_length, 0.0001f);
-  if (alignment <= -0.15f) {
-    return source_view_angles;
-  }
-
-  const float limited_length = std::min(mouse_delta_length, target_delta_length);
-  const Vec3 limited_target_delta{
-    target_delta.x * (limited_length / target_delta_length),
-    target_delta.y * (limited_length / target_delta_length),
-    0.0f
-  };
-  const float alignment_scale = std::clamp((alignment + 0.15f) / 1.15f, 0.0f, 1.0f);
-  const float blended_strength = strength * alignment_scale;
-  const Vec3 blended_delta{
-    mouse_delta.x + ((limited_target_delta.x - mouse_delta.x) * blended_strength),
-    mouse_delta.y + ((limited_target_delta.y - mouse_delta.y) * blended_strength),
-    0.0f
-  };
-
-  const Vec3 assisted_angles = aimbot_clamp_angles(Vec3{
-    source_view_angles.x - mouse_delta.x + blended_delta.x,
-    source_view_angles.y - mouse_delta.y + blended_delta.y,
-    0.0f
-  });
-
-  if (aimbot_calculate_fov(assisted_angles, target_view_angles) > aim_delta_length + 0.01f) {
-    return source_view_angles;
-  }
-
-  return assisted_angles;
-}
 
 inline Vec3 aimbot_apply_mode_angles(const Vec3& source_view_angles,
   const Vec3& target_view_angles,
@@ -1461,13 +1364,6 @@ inline Vec3 aimbot_apply_mode_angles(const Vec3& source_view_angles,
   switch (config.aimbot.aim_mode) {
   case Aim::AimMode::SMOOTH:
     return aimbot_apply_smooth_angles(source_view_angles, target_view_angles, motion_scale);
-  case Aim::AimMode::ASSISTIVE:
-    return aimbot_apply_assistive_angles(
-      source_view_angles,
-      target_view_angles,
-      last_input_angles,
-      has_last_input_angles,
-      motion_scale);
   default:
     return target_view_angles;
   }
