@@ -1339,14 +1339,6 @@ inline Vec3 aimbot_step_towards_angles(const Vec3& source_angles, const Vec3& ta
   });
 }
 
-inline Vec3 aimbot_apply_smooth_angles(const Vec3& source_view_angles,
-  const Vec3& target_view_angles,
-  float motion_scale = 1.0f) {
-  const float smooth_factor = std::clamp(config.aimbot.smooth_factor, 1.0f, 30.0f);
-  if (smooth_factor <= 1.001f) {
-    return aimbot_clamp_angles(target_view_angles);
-  }
-
   const Vec3 delta = aimbot_normalize_angle_delta(target_view_angles, source_view_angles);
   const float delta_length = std::hypot(delta.x, delta.y);
   if (delta_length <= 0.001f) {

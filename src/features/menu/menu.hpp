@@ -1309,7 +1309,7 @@ static void draw_watermark(void) {
   const float line_step = ImGui::GetFontSize() + 1.0f;
   float y = 8.0f;
 
-  draw_cathook_side_string(draw_list, y, cathook_watermark_rainbow_color(), "cathook by pupnoodle");
+  draw_cathook_side_string(draw_list, y, cathook_watermark_rainbow_color(), "cathook by drunk");
   y += line_step;
   draw_cathook_side_string(draw_list, y, IM_COL32(255, 255, 255, 255), cathook_watermark_version());
   y += line_step;
@@ -1318,35 +1318,6 @@ static void draw_watermark(void) {
   draw_cathook_side_string(draw_list, y, IM_COL32(255, 255, 255, 255), "Press 'INSERT' key to open/close cheat menu.");
   y += line_step;
   draw_cathook_side_string(draw_list, y, IM_COL32(255, 255, 255, 255), "Use mouse to navigate in menu.");
-}
-
-static void draw_beta_notice(void) {
-  constexpr const char* title = "BETA";
-  constexpr const char* message = "*some of the features may work badly or straight up not work, please report all issues on githubs issue page.";
-
-  ImGuiViewport* viewport = ImGui::GetMainViewport();
-  ImDrawList* draw_list = ImGui::GetForegroundDrawList();
-  ImFont* title_font = cat_menu::font_regular_large();
-  ImFont* message_font = cat_menu::font_regular();
-  const float title_size_px = title_font->LegacySize;
-  const float message_size_px = message_font->LegacySize;
-  const ImVec2 title_size = title_font->CalcTextSizeA(title_size_px, FLT_MAX, 0.0f, title);
-  const ImVec2 message_size = message_font->CalcTextSizeA(message_size_px, FLT_MAX, 0.0f, message);
-  const float center_x = viewport->Pos.x + (viewport->Size.x * 0.5f);
-  const float top_y = viewport->Pos.y + (viewport->Size.y * 0.18f);
-
-  draw_list->AddText(
-    title_font,
-    title_size_px,
-    ImVec2(center_x - (title_size.x * 0.5f), top_y),
-    ImGui::GetColorU32(cat_menu::k_accent),
-    title);
-  draw_list->AddText(
-    message_font,
-    message_size_px,
-    ImVec2(center_x - (message_size.x * 0.5f), top_y + title_size.y + 4.0f),
-    ImGui::GetColorU32(cat_menu::k_text_soft),
-    message);
 }
 
 static void draw_aimbot_content() {
@@ -1397,7 +1368,6 @@ static void draw_aimbot_content() {
     cat_menu::checkbox("Debug overlay", &config.aimbot.debug_overlay);
     cat_menu::combo("Aim mode", (int*)&config.aimbot.aim_mode, aim_mode_items, IM_ARRAYSIZE(aim_mode_items));
     cat_menu::slider_float("Aim FOV", &config.aimbot.fov, 0.0f, 180.0f, "%.0f deg");
-    cat_menu::slider_float("Smooth factor", &config.aimbot.smooth_factor, 1.0f, 30.0f, "%.1f");
     cat_menu::slider_float("Assist strength", &config.aimbot.assist_strength, 0.0f, 100.0f, "%.0f%%");
     cat_menu::slider_int("Resolver yaws", &config.aimbot.resolver_max_yaws, 4, 24);
   });
