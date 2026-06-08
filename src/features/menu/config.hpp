@@ -352,16 +352,6 @@ struct Visuals {
     bool collision = true;
   } thirdperson;
 
-  struct Hitmarker {
-    bool enabled = true;
-    bool damage_text = true;
-    float duration = 0.80f;
-    float size = 8.0f;
-    RGBA_float color = {.r = 1.0f, .g = 1.0f, .b = 1.0f, .a = 1.0f};
-    RGBA_float crit_color = {.r = 1.0f, .g = 0.57f, .b = 0.14f, .a = 1.0f};
-    RGBA_float headshot_color = {.r = 0.35f, .g = 0.82f, .b = 1.0f, .a = 1.0f};
-  } hitmarker;
-
   struct SpectatorList {
     bool enabled = true;
     bool show_target = true;

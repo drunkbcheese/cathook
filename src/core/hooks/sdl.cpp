@@ -25,7 +25,6 @@ V  o o  V  file: src/core/hooks/sdl.cpp
 #include "features/menu/indicators.hpp"
 #include "features/combat/backtrack/backtrack.hpp"
 #include "features/visuals/esp/esp.hpp"
-#include "features/visuals/hitmarker.hpp"
 #include "features/visuals/spectator_list.hpp"
 #include "features/automation/navbot/navbot_controller.hpp"
 #include "features/automation/nographics/nographics.hpp"
@@ -207,7 +206,6 @@ void swap_window_hook(SDL_Window* window) {
   draw_players_imgui();
   draw_backtrack_visualizer_imgui();
   draw_projectile_debug_imgui();
-  hitmarker::draw_imgui();
   navbot::controller().draw_imgui();
 
   draw_watermark();

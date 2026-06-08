@@ -500,7 +500,7 @@ bool aimbot_weapon_should_clear_secondary_for_auto_shoot(Weapon* weapon)
   case TF_WEAPON_ROCKETLAUNCHER_DIRECTHIT:
   case TF_WEAPON_GRENADELAUNCHER:
   case TF_WEAPON_FLAREGUN:
-  case TF_WEAPON_CROSSBOW:
+
   case TF_WEAPON_RAYGUN:
   case TF_WEAPON_PARTICLE_CANNON:
   case TF_WEAPON_DRG_POMSON:

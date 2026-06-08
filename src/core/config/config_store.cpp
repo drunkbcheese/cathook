@@ -343,13 +343,6 @@ void config_store::import_config(const Config& config)
     set_float("visuals.thirdperson.up", config.visuals.thirdperson.up);
     set_bool("visuals.thirdperson.scale", config.visuals.thirdperson.scale);
     set_bool("visuals.thirdperson.collision", config.visuals.thirdperson.collision);
-    set_bool("visuals.hitmarker.enabled", config.visuals.hitmarker.enabled);
-    set_bool("visuals.hitmarker.damage_text", config.visuals.hitmarker.damage_text);
-    set_float("visuals.hitmarker.duration", config.visuals.hitmarker.duration);
-    set_float("visuals.hitmarker.size", config.visuals.hitmarker.size);
-    set_color("visuals.hitmarker.color", config.visuals.hitmarker.color);
-    set_color("visuals.hitmarker.crit_color", config.visuals.hitmarker.crit_color);
-    set_color("visuals.hitmarker.headshot_color", config.visuals.hitmarker.headshot_color);
     set_int("visuals.indicators.enabled_mask", static_cast<int>(config.visuals.indicators.enabled_mask));
     set_float("visuals.indicators.x", config.visuals.indicators.x);
     set_float("visuals.indicators.y", config.visuals.indicators.y);
@@ -782,13 +775,6 @@ void config_store::export_config(Config& config) const
     config.visuals.thirdperson.up = get_float("visuals.thirdperson.up", config.visuals.thirdperson.up);
     config.visuals.thirdperson.scale = get_bool("visuals.thirdperson.scale", config.visuals.thirdperson.scale);
     config.visuals.thirdperson.collision = get_bool("visuals.thirdperson.collision", config.visuals.thirdperson.collision);
-    config.visuals.hitmarker.enabled = get_bool("visuals.hitmarker.enabled", config.visuals.hitmarker.enabled);
-    config.visuals.hitmarker.damage_text = get_bool("visuals.hitmarker.damage_text", config.visuals.hitmarker.damage_text);
-    config.visuals.hitmarker.duration = get_float("visuals.hitmarker.duration", config.visuals.hitmarker.duration);
-    config.visuals.hitmarker.size = get_float("visuals.hitmarker.size", config.visuals.hitmarker.size);
-    config.visuals.hitmarker.color = get_color("visuals.hitmarker.color", config.visuals.hitmarker.color);
-    config.visuals.hitmarker.crit_color = get_color("visuals.hitmarker.crit_color", config.visuals.hitmarker.crit_color);
-    config.visuals.hitmarker.headshot_color = get_color("visuals.hitmarker.headshot_color", config.visuals.hitmarker.headshot_color);
     const int indicator_mask = get_int("visuals.indicators.enabled_mask", legacy_indicator_mask > 0 ? legacy_indicator_mask : static_cast<int>(config.visuals.indicators.enabled_mask));
     config.visuals.indicators.enabled_mask = static_cast<uint32_t>(std::max(0, indicator_mask)) & ~Visuals::Indicators::legacy_ticks;
     config.visuals.indicators.x = get_float("visuals.indicators.x", get_float("misc.exploits.tickbase_indicator_x", config.visuals.indicators.x));

@@ -1610,16 +1610,6 @@ static void draw_visuals_ui_content() {
     cat_menu::checkbox("Highlight firstperson", &config.visuals.spectator_list.highlight_firstperson);
     cat_menu::color_picker("Firstperson color", config.visuals.spectator_list.firstperson_color.to_arr());
   });
-  cat_menu::flow_panel("Feedback", 1, 188.0f, [&]() {
-    cat_menu::checkbox("Hitmarker", &config.visuals.hitmarker.enabled);
-    cat_menu::checkbox("Damage text", &config.visuals.hitmarker.damage_text);
-    cat_menu::slider_float("Hitmarker duration", &config.visuals.hitmarker.duration, 0.20f, 1.50f, "%.2f s");
-    cat_menu::slider_float("Hitmarker size", &config.visuals.hitmarker.size, 4.0f, 16.0f, "%.1f px");
-    cat_menu::color_picker("Hitmarker color", config.visuals.hitmarker.color.to_arr());
-    cat_menu::color_picker("Crit color", config.visuals.hitmarker.crit_color.to_arr());
-    cat_menu::color_picker("Headshot color", config.visuals.hitmarker.headshot_color.to_arr());
-  });
-  cat_menu::end_flow_layout();
 }
 
 static void draw_visuals_tab() {

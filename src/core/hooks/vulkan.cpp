@@ -25,7 +25,6 @@ V  o o  V  file: src/core/hooks/vulkan.cpp
 
 #include "features/combat/backtrack/backtrack.hpp"
 #include "features/visuals/esp/esp.cpp"
-#include "features/visuals/hitmarker.hpp"
 #include "features/visuals/spectator_list.hpp"
 
 #include "core/print.hpp"
@@ -610,7 +609,6 @@ static void draw_imgui_overlay()
   draw_players_imgui();
   draw_backtrack_visualizer_imgui();
   draw_projectile_debug_imgui();
-  hitmarker::draw_imgui();
   navbot::controller().draw_imgui();
 
   draw_watermark();
