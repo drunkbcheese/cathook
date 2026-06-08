@@ -87,26 +87,6 @@ struct head_emoji_texture_state
   ImGuiContext* context = nullptr;
 };
 
-struct mafia_title_range
-{
-  int min_level = 0;
-  int max_level = 0;
-  const char* title = nullptr;
-};
-
-constexpr std::array<mafia_title_range, 10> cathook_mafia_titles = {{
-  {0, 9, "Crook"},
-  {50, 50, "Crook"},
-  {10, 10, "Bad Cop"},
-  {0, 10, "Hoody"},
-  {0, 5, "Gangster"},
-  {1, 1, "Poor Man"},
-  {10, 10, "Rich Man"},
-  {10, 34, "Hitman"},
-  {15, 99, "Boss"},
-  {60, 100, "God Father"},
-}};
-
 head_emoji_texture_state g_head_emoji_texture{};
 std::array<Vec3, cathook_head_emoji_cache_size> g_head_emoji_positions{};
 std::array<bool, cathook_head_emoji_cache_size> g_head_emoji_position_valid{};
@@ -741,66 +721,6 @@ template <typename value_type>
   return *reinterpret_cast<value_type*>(base + entry_offset);
 }
 
-[[nodiscard]] int get_mafia_level(Entity* player_resource, int player_index)
-{
-  const auto score = read_player_resource_value<int>(player_resource, player_resource_score_offset, player_index);
-  const auto deaths = read_player_resource_value<int>(player_resource, player_resource_deaths_offset, player_index);
-  const auto damage = read_player_resource_value<int>(player_resource, tf_player_resource_damage_offset, player_index);
-
-  const auto level = (score * 3) + (damage / 100) - (deaths * 7);
-  return std::clamp(level, 1, 100);
-}
-
-[[nodiscard]] uint32_t stable_mafia_seed(Player* player, int mafia_level)
-{
-  auto seed = static_cast<uint32_t>(mafia_level);
-  auto info = player_info{};
-  if (engine != nullptr && engine->get_player_info(player->get_index(), &info) && info.friends_id != 0) {
-    seed ^= static_cast<uint32_t>(info.friends_id);
-  } else {
-    seed ^= static_cast<uint32_t>(player->get_index() * 0x9E3779B9u);
-  }
-
-  seed ^= seed >> 16;
-  seed *= 0x7FEB352Du;
-  seed ^= seed >> 15;
-  seed *= 0x846CA68Bu;
-  seed ^= seed >> 16;
-  return seed;
-}
-
-[[nodiscard]] const char* get_mafia_title(Player* player, int mafia_level)
-{
-  std::array<const char*, cathook_mafia_titles.size()> matches{};
-  size_t match_count = 0;
-
-  for (const auto& range : cathook_mafia_titles) {
-    if (mafia_level < range.min_level || mafia_level > range.max_level || range.title == nullptr) {
-      continue;
-    }
-
-    matches[match_count++] = range.title;
-  }
-
-  if (match_count == 0) {
-    return "Crook";
-  }
-
-  const auto seed = stable_mafia_seed(player, mafia_level);
-  return matches[seed % match_count];
-}
-
-[[nodiscard]] std::string get_mafia_text(Player* player, Entity* player_resource)
-{
-  if (player == nullptr || player_resource == nullptr) {
-    return {};
-  }
-
-  const auto mafia_level = get_mafia_level(player_resource, player->get_index());
-  const auto* title = get_mafia_title(player, mafia_level);
-  return "Lv." + std::to_string(mafia_level) + " " + title;
-}
-
 [[nodiscard]] int get_head_emoji_tile_index(Player* player)
 {
   if (player == nullptr) {
@@ -1299,39 +1219,6 @@ void draw_text(ImDrawList* draw_list, const ImVec2& position, ImU32 color, const
   draw_list->AddText(position, color, text.c_str());
 }
 
-void draw_player_mafia_text(ImDrawList* draw_list, const esp_bounds& bounds, Player* player, Entity* player_resource, float right_aligned_y = -1.0f)
-{
-  if (draw_list == nullptr || player == nullptr || player_resource == nullptr || !config.esp.player.mafia_level) {
-    return;
-  }
-
-  const auto mafia_text = get_mafia_text(player, player_resource);
-  if (mafia_text.empty()) {
-    return;
-  }
-
-  constexpr auto mafia_color = IM_COL32(255, 255, 255, 255);
-  const auto line_height = ImGui::GetTextLineHeight();
-  switch (config.esp.player.mafia_level_position) {
-  case Esp::Player::mafia_position::LEFT: {
-    const auto text_size = ImGui::CalcTextSize(mafia_text.c_str());
-    draw_text(draw_list, ImVec2(bounds.min_x - cathook_text_padding - text_size.x, bounds.min_y), mafia_color, mafia_text);
-    break;
-  }
-  case Esp::Player::mafia_position::RIGHT:
-    draw_text(draw_list, ImVec2(bounds.max_x + cathook_text_padding, right_aligned_y >= 0.0f ? right_aligned_y : bounds.min_y), mafia_color, mafia_text);
-    break;
-  case Esp::Player::mafia_position::UNDER_NAME:
-  default: {
-    auto text_y = bounds.min_y - line_height - cathook_text_padding;
-    if (config.esp.player.name) {
-      text_y -= line_height;
-    }
-    draw_text_centered(draw_list, ImVec2((bounds.min_x + bounds.max_x) * 0.5f, text_y), mafia_color, mafia_text);
-    break;
-  }
-  }
-}
 
 void draw_player_class_icon(ImDrawList* draw_list, const esp_bounds& bounds, Player* player, Player* localplayer)
 {
@@ -1355,9 +1242,6 @@ void draw_player_class_icon(ImDrawList* draw_list, const esp_bounds& bounds, Pla
 
   auto text_lines_above = 0.0f;
   if (config.esp.player.name) {
-    text_lines_above += ImGui::GetTextLineHeight();
-  }
-  if (config.esp.player.mafia_level && config.esp.player.mafia_level_position == Esp::Player::mafia_position::UNDER_NAME) {
     text_lines_above += ImGui::GetTextLineHeight();
   }
 
@@ -1528,7 +1412,6 @@ void draw_player_esp(ImDrawList* draw_list, Player* player, Player* localplayer,
 
   draw_player_class_icon(draw_list, bounds, player, localplayer);
   draw_player_head_emoji(draw_list, bounds, player, localplayer);
-  draw_player_mafia_text(draw_list, bounds, player, player_resource, flag_y);
 }
 
 [[nodiscard]] bool should_draw_building(Entity* entity, Player* localplayer)

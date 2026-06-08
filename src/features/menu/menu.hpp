@@ -1414,7 +1414,6 @@ static void draw_combat_tab() {
 }
 
 static void draw_esp_content() {
-  const char* mafia_position_items[] = { "Under name", "Left", "Right" };
   const char* box_type_items[] = { "Outline", "Corner", "Filled", "Rounded", "Projected" };
   const char* head_emoji_items[] = { "Emoji 1", "Emoji 2" };
 
@@ -1447,8 +1446,6 @@ static void draw_esp_content() {
     cat_menu::combo("Emoji style", &config.esp.player.head_emoji_style, head_emoji_items, IM_ARRAYSIZE(head_emoji_items));
     cat_menu::checkbox("Emoji teammates", &config.esp.player.head_emoji_teammates);
     ImGui::SliderFloat("Emoji scale", &config.esp.player.head_emoji_scale, 0.5f, 5.0f, "%.1f");
-    cat_menu::checkbox("Mafia level", &config.esp.player.mafia_level);
-    cat_menu::combo("Mafia position", (int*)&config.esp.player.mafia_level_position, mafia_position_items, IM_ARRAYSIZE(mafia_position_items));
     cat_menu::checkbox("Target flag", &config.esp.player.flags.target_indicator);
     cat_menu::checkbox("Friend flag", &config.esp.player.flags.friend_indicator);
     cat_menu::checkbox("Scoped flag", &config.esp.player.flags.scoped_indicator);

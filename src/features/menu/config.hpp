@@ -195,8 +195,6 @@ struct Esp {
     float head_emoji_scale = 2.0f;
     int head_emoji_style = 0;
     bool head_emoji_teammates = false;
-    bool mafia_level = true;
-    mafia_position mafia_level_position = mafia_position::UNDER_NAME;
     
     struct Flags {
       bool target_indicator = true;
