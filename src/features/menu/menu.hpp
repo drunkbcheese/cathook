@@ -1394,11 +1394,6 @@ static void draw_aimbot_content() {
     cat_menu::slider_float("Strafe confidence", &config.aimbot.projectile_strafe_confidence, 0.0f, 100.0f, "%.0f%%");
     cat_menu::slider_int("Trace interval", &config.aimbot.projectile_trace_interval, 1, 8);
   });
-  cat_menu::flow_panel("Heavy", 2, 92.0f, [&]() {
-    cat_menu::checkbox("Heavy auto rev", &config.aimbot.auto_rev);
-    cat_menu::checkbox("Heavy auto unrev", &config.aimbot.auto_unrev);
-    cat_menu::slider_float("Heavy rev threshold", &config.aimbot.auto_rev_threshold, 200.0f, 1200.0f, "%.0f HU");
-  });
   cat_menu::flow_panel("Sniper", 2, 120.0f, [&]() {
     cat_menu::checkbox("Sniper auto scope", &config.aimbot.auto_scope);
     cat_menu::checkbox("Sniper auto unscope", &config.aimbot.auto_unscope);

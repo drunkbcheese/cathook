@@ -230,11 +230,6 @@ bool navbot_auto_engage_can_block_jump(Player* localplayer, Weapon* weapon)
     return config.aimbot.auto_scope || config.aimbot.auto_unscope;
   }
 
-  if (localplayer->get_tf_class() == tf_class::HEAVYWEAPONS && weapon->is_minigun())
-  {
-    return config.aimbot.auto_rev || config.aimbot.auto_unrev;
-  }
-
   return false;
 }
 
@@ -253,16 +248,6 @@ bool navbot_release_auto_engage(Player* localplayer, Weapon* weapon, user_cmd* u
     user_cmd->buttons |= IN_ATTACK2;
     return true;
   }
-
-  if (localplayer->get_tf_class() == tf_class::HEAVYWEAPONS
-    && weapon->is_minigun()
-    && localplayer->is_heavy_revved()
-    && (config.aimbot.auto_rev || config.aimbot.auto_unrev))
-  {
-    user_cmd->buttons |= IN_ATTACK2;
-    return true;
-  }
-
   return false;
 }
 

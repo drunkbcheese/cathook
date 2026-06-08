@@ -308,10 +308,6 @@ inline void register_builtin_targets() {
   register_target("aimbot.projectile_trace_interval", "Projectile trace interval", &config.aimbot.projectile_trace_interval);
   register_target("aimbot.projectile_splash_debug", "Projectile splash debug", &config.aimbot.projectile_splash_debug);
   register_target("aimbot.ignore", "Ignore", reinterpret_cast<int*>(&config.aimbot.ignore));
-  register_target("aimbot.auto_rev", "Heavy auto rev", &config.aimbot.auto_rev);
-  register_target("aimbot.auto_unrev", "Heavy auto unrev", &config.aimbot.auto_unrev);
-  register_target("aimbot.auto_rev_threshold", "Heavy rev threshold", &config.aimbot.auto_rev_threshold);
-  register_target("aimbot.auto_scope", "Sniper auto scope", &config.aimbot.auto_scope);
   register_target("aimbot.auto_unscope", "Sniper auto unscope", &config.aimbot.auto_unscope);
   register_target("aimbot.auto_scope_threshold", "Auto scope threshold", &config.aimbot.auto_scope_threshold);
   register_target("aimbot.scoped_only", "Scoped only", &config.aimbot.scoped_only);

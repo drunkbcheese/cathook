@@ -224,9 +224,6 @@ void config_store::import_config(const Config& config)
     set_bool("aimbot.auto_scope", config.aimbot.auto_scope);
     set_bool("aimbot.auto_unscope", config.aimbot.auto_unscope);
     set_float("aimbot.auto_scope_threshold", config.aimbot.auto_scope_threshold);
-    set_bool("aimbot.auto_rev", config.aimbot.auto_rev);
-    set_bool("aimbot.auto_unrev", config.aimbot.auto_unrev);
-    set_float("aimbot.auto_rev_threshold", config.aimbot.auto_rev_threshold);
     set_bool("aimbot.scoped_only", config.aimbot.scoped_only);
     set_bool("aimbot.wait_for_headshot", config.aimbot.wait_for_headshot);
     set_int("aimbot.ignore", static_cast<int>(config.aimbot.ignore));
@@ -604,9 +601,6 @@ void config_store::export_config(Config& config) const
     config.aimbot.auto_scope_threshold = get_float(
         "aimbot.auto_scope_threshold",
         get_float("aimbot.auto_scope_min_distance", config.aimbot.auto_scope_threshold));
-    config.aimbot.auto_rev = get_bool("aimbot.auto_rev", config.aimbot.auto_rev);
-    config.aimbot.auto_unrev = get_bool("aimbot.auto_unrev", config.aimbot.auto_unrev);
-    config.aimbot.auto_rev_threshold = get_float("aimbot.auto_rev_threshold", config.aimbot.auto_rev_threshold);
     config.aimbot.scoped_only = get_bool("aimbot.scoped_only", config.aimbot.scoped_only);
     config.aimbot.wait_for_headshot = get_bool("aimbot.wait_for_headshot", config.aimbot.wait_for_headshot);
     int ignore_default = config.aimbot.ignore;

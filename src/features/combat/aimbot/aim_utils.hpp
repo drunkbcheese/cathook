@@ -1413,22 +1413,4 @@ inline bool aimbot_should_auto_unscope(Player* localplayer, Weapon* weapon, cons
   return !aimbot_simple_move_sim_valid(localplayer, candidate.player, 0.15f);
 }
 
-inline bool aimbot_should_auto_rev(Player* localplayer, Weapon* weapon, const aimbot_candidate& candidate) {
-  if (!config.aimbot.auto_rev || localplayer == nullptr || weapon == nullptr || candidate.player == nullptr) return false;
-  if (localplayer->get_tf_class() != tf_class::HEAVYWEAPONS || !weapon->is_minigun()) return false;
-  if (localplayer->is_heavy_revved() || !weapon->can_secondary_attack()) return false;
-  if (!localplayer->is_on_ground()) return false;
-  if (!aimbot_candidate_visible_shootable(localplayer, candidate) && candidate.distance <= config.aimbot.auto_rev_threshold) return false;
-  return aimbot_simple_move_sim_valid(localplayer, candidate.player, 0.15f);
-}
-
-inline bool aimbot_should_auto_unrev(Player* localplayer, Weapon* weapon, const aimbot_candidate& candidate) {
-  if (!config.aimbot.auto_unrev || localplayer == nullptr || weapon == nullptr || candidate.player == nullptr) return false;
-  if (localplayer->get_tf_class() != tf_class::HEAVYWEAPONS || !weapon->is_minigun()) return false;
-  if (!localplayer->is_heavy_revved()) return false;
-  if (aimbot_candidate_visible_shootable(localplayer, candidate)) return false;
-  if (candidate.distance <= config.aimbot.auto_rev_threshold) return true;
-  return !aimbot_simple_move_sim_valid(localplayer, candidate.player, 0.1f);
-}
-
 #endif

@@ -1353,10 +1353,6 @@ bool aimbot(user_cmd* user_cmd, Vec3 original_view_angles) {
     user_cmd->buttons |= IN_ATTACK2;
   }
 
-  if (aimbot_should_auto_unrev(localplayer, weapon, best_candidate)) {
-    user_cmd->buttons |= IN_ATTACK2;
-  }
-
   if (!aimbot_use_key_active()) {
     store_aimbot_input_angles(source_view_angles);
     return finish_aimbot(aimbot_debug_reason::use_key_inactive, false);
@@ -1380,13 +1376,6 @@ bool aimbot(user_cmd* user_cmd, Vec3 original_view_angles) {
   }
 
   user_cmd->buttons &= ~IN_RELOAD;
-
-  if (aimbot_should_auto_rev(localplayer, weapon, best_candidate)) {
-    user_cmd->buttons |= IN_ATTACK2;
-    user_cmd->buttons &= ~IN_ATTACK;
-    store_aimbot_input_angles(source_view_angles);
-    return finish_aimbot(aimbot_debug_reason::auto_rev, false);
-  }
 
   aimbot_request_walk_to_target(localplayer, weapon, best_candidate);
 

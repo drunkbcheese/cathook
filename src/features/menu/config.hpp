@@ -108,13 +108,13 @@ struct Aim {
 
   ProjectileMode projectile_mode = ProjectileMode::DIRECT_THEN_SPLASH;
   uint32_t projectile_hitboxes = aim_hitbox_mask_auto;
-  bool projectile_wall_splash = true;
-  bool projectile_seam_shot = true;
+  bool projectile_wall_splash = false;
+  bool projectile_seam_shot = false;
   float projectile_splash_radius_scale = 1.0f;
   int projectile_path_steps = 16;
   int projectile_splash_samples = 18;
   int projectile_prediction_ticks = 360;
-  bool projectile_strafe_prediction = true;
+  bool projectile_strafe_prediction = false;
   float projectile_strafe_confidence = 55.0f;
   int projectile_trace_interval = 2;
   bool projectile_splash_debug = false;
@@ -127,9 +127,6 @@ struct Aim {
   bool auto_scope = false;
   bool auto_unscope = false;
   float auto_scope_threshold = 800.0f;
-  bool auto_rev = false;
-  bool auto_unrev = false;
-  float auto_rev_threshold = 450.0f;
   bool scoped_only = false;
   bool wait_for_headshot = false;
   
