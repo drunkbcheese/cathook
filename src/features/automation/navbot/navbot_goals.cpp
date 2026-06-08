@@ -842,10 +842,6 @@ goal_candidate choose_heal_follow_goal(const navbot_mesh& mesh, Player* localpla
   {
     score += (1.0f - std::clamp(static_cast<float>(target->get_health()) / static_cast<float>(target->get_max_health()), 0.0f, 1.0f)) * 18.0f;
   }
-  if (medic_automation::controller().wants_crossbow())
-  {
-    score += 4.0f;
-  }
 
   return make_entity_candidate(goal_type::heal_follow, score, destination, area_id, target->get_index());
 }

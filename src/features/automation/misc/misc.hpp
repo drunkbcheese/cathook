@@ -40,11 +40,8 @@ private:
   void run_auto_vote_map(GameEvent* event);
   void run_autotaunt(GameEvent* event);
   void run_chatspam();
-  void run_custom_announcer(GameEvent* event);
   void run_killsay(GameEvent* event);
   void process_killsay();
-  void reset_custom_announcer();
-  void play_custom_announcer_sound(const char* sound_name);
   void run_voice_command_spam();
   void run_noisemaker_spam();
   void run_micspam();
@@ -80,11 +77,6 @@ private:
   bool autotaunt_waiting_for_taunt_ = false;
   int chatspam_index_ = 0;
   int chatspam_last_index_ = -1;
-  unsigned int announcer_killstreak_ = 0;
-  unsigned int announcer_kill_combo_ = 0;
-  unsigned int announcer_headshot_combo_ = 0;
-  float announcer_last_kill_time_ = -100000.0f;
-  float announcer_last_headshot_time_ = -100000.0f;
   std::vector<std::pair<float, std::string>> pending_killsays_{};
   std::vector<unsigned long> reported_account_ids_{};
 };

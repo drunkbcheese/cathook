@@ -42,8 +42,6 @@ namespace
 {
 
 constexpr float beam_prefer_distance = 420.0f;
-constexpr float crossbow_min_distance = 450.0f;
-constexpr float crossbow_max_distance = 2400.0f;
 constexpr float danger_window = 1.35f;
 constexpr float resist_cycle_interval = 0.20f;
 constexpr float uber_input_interval = 0.35f;
@@ -59,19 +57,7 @@ bool any_medic_feature_enabled()
 {
   return config.misc.automation.medic_autoheal
     || config.misc.automation.medic_autovacc
-    || config.misc.automation.medic_autouber
-    || config.misc.automation.medic_auto_crossbow;
-}
-
-bool is_crossbow(Weapon* weapon)
-{
-  if (weapon == nullptr)
-  {
-    return false;
-  }
-
-  const auto def_id = weapon->get_def_id();
-  return def_id == Medic_m_CrusadersCrossbow || def_id == Medic_m_FestiveCrusadersCrossbow;
+    || config.misc.automation.medic_autouber;
 }
 
 Weapon* find_weapon(Player* localplayer, bool (*predicate)(Weapon*))
@@ -342,55 +328,6 @@ bool current_heal_beam_target_matches(Weapon* medigun, Player* target)
   return medigun->medigun_is_healing() && medigun->medigun_healing_target() == target->to_entity();
 }
 
-bool should_use_crossbow(Player* localplayer, Player* target, Weapon* crossbow, Weapon* medigun)
-{
-  if (!config.misc.automation.medic_auto_crossbow || localplayer == nullptr || target == nullptr || crossbow == nullptr)
-  {
-    return false;
-  }
-  if (!player_wounded(target) || !crossbow->can_primary_attack())
-  {
-    return false;
-  }
-  if (medigun != nullptr && (medigun->medigun_is_releasing_charge() || current_heal_beam_target_matches(medigun, target)))
-  {
-    return false;
-  }
-
-  const auto distance = distance_3d(localplayer->get_shoot_pos(), target_aim_position(target));
-  if (distance < crossbow_min_distance || distance > crossbow_max_distance)
-  {
-    return false;
-  }
-
-  return aimbot_trace_visible_to_position(localplayer, target, target_aim_position(target));
-}
-
-void apply_crossbow(user_cmd* user_cmd, Player* localplayer, Player* target, Weapon* weapon)
-{
-  if (user_cmd == nullptr || localplayer == nullptr || target == nullptr || !is_crossbow(weapon) || !weapon->can_primary_attack())
-  {
-    return;
-  }
-
-  const Vec3 target_pos = target_aim_position(target);
-  const auto intercept = local_prediction_find_projectile_intercept(
-    localplayer,
-    weapon,
-    target_pos,
-    target->get_velocity(),
-    user_cmd,
-    1.5f);
-  if (!intercept.valid)
-  {
-    return;
-  }
-
-  user_cmd->view_angles = aimbot_clamp_angles(intercept.aim_angles);
-  user_cmd->buttons &= ~IN_RELOAD;
-  user_cmd->buttons |= IN_ATTACK;
-  apply_visible_view(user_cmd);
-}
 
 void apply_autoheal(user_cmd* user_cmd, Player* localplayer, Player* target, Weapon* medigun)
 {
@@ -524,7 +461,6 @@ void medic_controller::clear_runtime_state()
 {
   heal_target_index_ = 0;
   heal_target_position_ = {};
-  wants_crossbow_ = false;
   suppress_aimbot_ = false;
 }
 
@@ -553,11 +489,6 @@ void medic_controller::on_pre_navbot_create_move(user_cmd* user_cmd)
   {
     return;
   }
-
-  auto* crossbow = find_weapon(localplayer, is_crossbow);
-  heal_target_index_ = target->get_index();
-  heal_target_position_ = target->get_origin();
-  wants_crossbow_ = should_use_crossbow(localplayer, target, crossbow, medigun);
 }
 
 void medic_controller::on_post_navbot_create_move(user_cmd* user_cmd)
@@ -577,12 +508,6 @@ void medic_controller::on_post_navbot_create_move(user_cmd* user_cmd)
   }
 
   auto* active_weapon = localplayer->get_weapon();
-  if (wants_crossbow_ && is_crossbow(active_weapon))
-  {
-    apply_crossbow(user_cmd, localplayer, target, active_weapon);
-    suppress_aimbot_ = (user_cmd->buttons & IN_ATTACK) != 0;
-    return;
-  }
 
   if (active_weapon != nullptr && active_weapon->is_medigun())
   {
@@ -647,10 +572,6 @@ Vec3 medic_controller::heal_target_position() const
   return heal_target_position_;
 }
 
-bool medic_controller::wants_crossbow() const
-{
-  return wants_crossbow_;
-}
 
 bool medic_controller::should_suppress_aimbot() const
 {

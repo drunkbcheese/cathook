@@ -462,7 +462,6 @@ void config_store::import_config(const Config& config)
     set_bool("misc.automation.medic_autoheal", config.misc.automation.medic_autoheal);
     set_bool("misc.automation.medic_autovacc", config.misc.automation.medic_autovacc);
     set_bool("misc.automation.medic_autouber", config.misc.automation.medic_autouber);
-    set_bool("misc.automation.medic_auto_crossbow", config.misc.automation.medic_auto_crossbow);
     set_int("misc.automation.medic_heal_targets_mask", static_cast<int>(config.misc.automation.medic_heal_targets_mask));
     set_bool("misc.automation.medic_heal_only", config.misc.automation.medic_heal_only);
     set_bool("misc.automation.auto_report", config.misc.automation.auto_report);
@@ -1062,7 +1061,6 @@ void config_store::export_config(Config& config) const
     config.misc.automation.medic_autoheal = get_bool("misc.automation.medic_autoheal", config.misc.automation.medic_autoheal);
     config.misc.automation.medic_autovacc = get_bool("misc.automation.medic_autovacc", config.misc.automation.medic_autovacc);
     config.misc.automation.medic_autouber = get_bool("misc.automation.medic_autouber", config.misc.automation.medic_autouber);
-    config.misc.automation.medic_auto_crossbow = get_bool("misc.automation.medic_auto_crossbow", config.misc.automation.medic_auto_crossbow);
     config.misc.automation.medic_heal_targets_mask = static_cast<uint32_t>(std::clamp(
         get_int("misc.automation.medic_heal_targets_mask", static_cast<int>(config.misc.automation.medic_heal_targets_mask)),
         0,

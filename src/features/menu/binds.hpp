@@ -435,7 +435,6 @@ inline void register_builtin_targets() {
   register_target("misc.automation.medic_autoheal", "Medic autoheal", &config.misc.automation.medic_autoheal);
   register_target("misc.automation.medic_autovacc", "Medic autovacc", &config.misc.automation.medic_autovacc);
   register_target("misc.automation.medic_autouber", "Medic autouber", &config.misc.automation.medic_autouber);
-  register_target("misc.automation.medic_auto_crossbow", "Medic Crossbow", &config.misc.automation.medic_auto_crossbow);
   register_target("misc.automation.medic_heal_targets_mask", "Medic heal targets", reinterpret_cast<int*>(&config.misc.automation.medic_heal_targets_mask));
   register_target("misc.automation.medic_heal_only", "Medic heal only", &config.misc.automation.medic_heal_only);
   register_target("misc.automation.auto_class_select", "Auto class select", &config.misc.automation.auto_class_select);

@@ -76,7 +76,6 @@ constexpr int report_reason_cheating = 1;
 constexpr const char* auto_balance_pending_token = "#TF_Autobalance_TeamChangePending";
 constexpr float autotaunt_step_interval = 0.12f;
 constexpr int max_chat_command_length = 220;
-constexpr float announcer_combo_window = 5.0f;
 
 using get_party_client_fn = void* (*)();
 using get_matchmaking_client_fn = void* (*)();
@@ -116,12 +115,6 @@ struct text_file_cache
   std::filesystem::file_time_type last_write_time{};
   std::vector<std::string> lines{};
   bool attempted = false;
-};
-
-struct announcer_entry
-{
-  int count;
-  const char* sound_name;
 };
 
 struct voice_command_entry
@@ -165,13 +158,6 @@ const std::array<std::string_view, 5> builtin_killsay_mlg = {
   "QUICKSCOPED"
 };
 
-constexpr std::array<announcer_entry, 4> announcer_headshot_combo_sounds{{
-  {1, "headshot.wav"},
-  {2, "headshot.wav"},
-  {4, "hattrick.wav"},
-  {6, "headhunter.wav"}
-}};
-
 constexpr std::array<voice_command_entry, 20> voice_command_spam_commands{{
   {Misc::Automation::voice_command_spam_mode::medic, 0, 0},
   {Misc::Automation::voice_command_spam_mode::thanks, 0, 1},
@@ -195,27 +181,6 @@ constexpr std::array<voice_command_entry, 20> voice_command_spam_commands{{
   {Misc::Automation::voice_command_spam_mode::battle_cry, 2, 1}
 }};
 
-constexpr std::array<announcer_entry, 12> announcer_killstreak_sounds{{
-  {1, "firstblood.wav"},
-  {5, "dominating.wav"},
-  {7, "rampage.wav"},
-  {9, "killingspree.wav"},
-  {11, "monsterkill.wav"},
-  {15, "unstoppable.wav"},
-  {17, "ultrakill.wav"},
-  {19, "godlike.wav"},
-  {21, "wickedsick.wav"},
-  {23, "impressive.wav"},
-  {25, "ludicrouskill.wav"},
-  {27, "holyshit.wav"}
-}};
-
-constexpr std::array<announcer_entry, 4> announcer_kill_combo_sounds{{
-  {2, "doublekill.wav"},
-  {3, "triplekill.wav"},
-  {4, "multikill.wav"},
-  {5, "combowhore.wav"}
-}};
 
 const char* class_name(tf_class value)
 {
@@ -259,18 +224,6 @@ const char* team_name(tf_team value)
 }
 
 template<std::size_t count>
-const announcer_entry* find_announcer_entry(const std::array<announcer_entry, count>& entries, const int value)
-{
-  for (const auto& entry : entries)
-  {
-    if (entry.count == value)
-    {
-      return &entry;
-    }
-  }
-
-  return nullptr;
-}
 
 std::string shell_quote(std::string value)
 {
@@ -289,16 +242,6 @@ std::string shell_quote(std::string value)
   }
   quoted.push_back('\'');
   return quoted;
-}
-
-std::filesystem::path resolve_announcer_sound_path(const char* sound_name)
-{
-  if (sound_name == nullptr || sound_name[0] == '\0')
-  {
-    return {};
-  }
-
-  return cathook::core::root_directory() / "assets" / "sound" / sound_name;
 }
 
 void replace_all(std::string& text, std::string_view token, std::string_view replacement)
@@ -1141,7 +1084,6 @@ void automation_controller::on_game_event(GameEvent* event)
 {
   run_auto_vote_map(event);
   run_autotaunt(event);
-  run_custom_announcer(event);
   run_killsay(event);
 }
 

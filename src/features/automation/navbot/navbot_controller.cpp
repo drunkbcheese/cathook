@@ -578,13 +578,6 @@ navbot_weapon_slot choose_navbot_weapon_slot(Player* localplayer, const navbot_g
     }
   }
 
-  if (goal == goal_type::heal_follow && localplayer->get_tf_class() == tf_class::MEDIC)
-  {
-    return medic_automation::controller().wants_crossbow()
-      ? navbot_weapon_slot::primary
-      : navbot_weapon_slot::secondary;
-  }
-
   auto* enemy = choose_navbot_enemy(localplayer);
   auto desired_slot = goal_is_combat(goal)
     ? choose_combat_slot(localplayer, goal, enemy)

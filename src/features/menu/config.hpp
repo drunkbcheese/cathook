@@ -567,7 +567,6 @@ struct Misc {
     killsay_mode killsay = killsay_mode::OFF;
     int killsay_delay_ms = 100;
     std::string killsay_file = "killsays.txt";
-    bool custom_announcer = false;
     bool mvm_instant_respawn = false;
     bool mvm_instant_revive = false;
     bool allow_mvm_inspect = false;
@@ -577,7 +576,6 @@ struct Misc {
     bool medic_autoheal = false;
     bool medic_autovacc = false;
     bool medic_autouber = false;
-    bool medic_auto_crossbow = false;
     uint32_t medic_heal_targets_mask = medic_heal_target_default;
     bool medic_heal_only = false;
     bool auto_queue = false;
