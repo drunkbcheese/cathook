@@ -2021,7 +2021,6 @@ static void draw_automation_utilities_content() {
     cat_menu::checkbox("Auto report", &config.misc.automation.auto_report);
     cat_menu::checkbox("Auto vote map", &config.misc.automation.auto_vote_map);
     cat_menu::slider_int("Vote option", &config.misc.automation.auto_vote_map_option, 0, 2);
-    cat_menu::checkbox("Custom announcer", &config.misc.automation.custom_announcer);
   });
   cat_menu::flow_panel("Spam", 1, 170.0f, [&]() {
     cat_menu::checkbox("Noisemaker spam", &config.misc.automation.noisemaker_spam);
@@ -2323,7 +2322,6 @@ static void draw_misc_content() {
   cat_menu::begin_flow_layout("misc_layout", 2);
   if (misc_subtab == misc_subtab_collective) {
     cat_menu::flow_panel("Collective", 0, 96.0f, [&]() {
-      cat_menu::checkbox("Custom announcer", &config.misc.automation.custom_announcer);
     });
   } else {
     static const char* anti_aim_pitch_items[] = {

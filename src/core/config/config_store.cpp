@@ -453,7 +453,6 @@ void config_store::import_config(const Config& config)
     set_int("misc.automation.killsay", static_cast<int>(config.misc.automation.killsay));
     set_int("misc.automation.killsay_delay_ms", config.misc.automation.killsay_delay_ms);
     set_string("misc.automation.killsay_file", config.misc.automation.killsay_file);
-    set_bool("misc.automation.custom_announcer", config.misc.automation.custom_announcer);
     set_bool("misc.automation.mvm_instant_respawn", config.misc.automation.mvm_instant_respawn);
     set_bool("misc.automation.mvm_instant_revive", config.misc.automation.mvm_instant_revive);
     set_bool("misc.automation.allow_mvm_inspect", config.misc.automation.allow_mvm_inspect);
@@ -1041,7 +1040,6 @@ void config_store::export_config(Config& config) const
         0,
         10000);
     config.misc.automation.killsay_file = get_string("misc.automation.killsay_file", config.misc.automation.killsay_file);
-    config.misc.automation.custom_announcer = get_bool("misc.automation.custom_announcer", config.misc.automation.custom_announcer);
     config.misc.automation.mvm_instant_respawn = get_bool(
         "misc.automation.mvm_instant_respawn",
         config.misc.automation.mvm_instant_respawn);
