@@ -155,8 +155,8 @@ struct backtrack_config {
 };
 
 struct ipc_config {
-  bool enabled = true;
-  bool auto_connect = true;
+  bool enabled = false;
+  bool auto_connect = false;
   bool auto_ignore_local_bots = true;
 };
 
