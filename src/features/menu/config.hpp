@@ -92,7 +92,7 @@ struct Aim {
   struct button key = {.button = SDLK_UNKNOWN};
   
   float fov = 45;
-  float smooth_factor = 8.0f;
+  float smooth_factor = 1.0f;
   bool draw_fov = false;
   bool shoot_through_glass = false;
   bool spread_compensation = true;
@@ -108,13 +108,13 @@ struct Aim {
 
   ProjectileMode projectile_mode = ProjectileMode::DIRECT_THEN_SPLASH;
   uint32_t projectile_hitboxes = aim_hitbox_mask_auto;
-  bool projectile_wall_splash = false;
-  bool projectile_seam_shot = false;
+  bool projectile_wall_splash = true;
+  bool projectile_seam_shot = true;
   float projectile_splash_radius_scale = 1.0f;
   int projectile_path_steps = 16;
   int projectile_splash_samples = 18;
   int projectile_prediction_ticks = 360;
-  bool projectile_strafe_prediction = false;
+  bool projectile_strafe_prediction = true;
   float projectile_strafe_confidence = 55.0f;
   int projectile_trace_interval = 2;
   bool projectile_splash_debug = false;
