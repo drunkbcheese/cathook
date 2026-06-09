@@ -1,35 +1,14 @@
 <p align="center">
-  <img src="assets/cathook.png" alt="Cathook">
+  <img src="assets/cathook.png" alt="DrunkHook">
 </p>
 
 <p align="center">
-  Cathook is a Team Fortress 2 Linux internal DLC.
+  DRUNKHOOK is a Team Fortress 2 Linux internal DLC.
 </p>
 
-# BETA WARNING
+# BETA FORK WARNING
 
-This project is currently in beta. Some features may be broken, unfinished, unstable, or may not work at all. Expect bugs, crashes, missing behavior, and issues.
-
-##
-
-## Risk of Manual Ban
-
-Doesnt matter what cheat you use, get ready for a gameban.
-
-## Overview
-
-Cathook builds into a shared object that is injected into the TF2 process. It reads game state, calls Source Engine interfaces, hooks selected client/runtime functions, and renders or automates features from inside the game.
-
-Useful project details:
-
-* The build uses a unity-style entry point in `src/cathook.cpp`.
-* Runtime files live under `/opt/cathook` by default.
-* Built libraries are installed to `/opt/cathook/bin`.
-* Runtime assets from `assets/` are installed to `/opt/cathook/assets`.
-* Runtime configs are stored as `.cat` files under `/opt/cathook/configs` by default, including `default.cat`.
-* Logs are written under `/opt/cathook/logs`.
-
-For Source Engine interface and structure references, see Valve's [Source SDK 2013 Multiplayer](https://github.com/ValveSoftware/source-sdk-2013).
+This fork is used to actually not crash as often as pupnoodle inccreases updates. and it's only used to add nesssary updates to increase performance and stability
 
 ## Installing, Building, Attaching
 

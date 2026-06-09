@@ -1309,7 +1309,7 @@ static void draw_watermark(void) {
   const float line_step = ImGui::GetFontSize() + 1.0f;
   float y = 8.0f;
 
-  draw_cathook_side_string(draw_list, y, cathook_watermark_rainbow_color(), "cathook by drunk");
+  draw_cathook_side_string(draw_list, y, cathook_watermark_rainbow_color(), "drunkhook");
   y += line_step;
   draw_cathook_side_string(draw_list, y, IM_COL32(255, 255, 255, 255), cathook_watermark_version());
   y += line_step;
