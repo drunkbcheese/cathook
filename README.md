@@ -3,12 +3,12 @@
 </p>
 
 <p align="center">
-  DRUNKHOOK is a Team Fortress 2 Linux internal DLC.
+  Drunkhook is a Team Fortress 2 Linux internal DLC.
 </p>
 
 # BETA FORK WARNING
 
-This fork is used to actually not crash as often as pupnoodle inccreases updates. and it's only used to add nesssary updates to increase performance and stability
+This fork is used to actually not crash as often as pupnoodle inccreases updates. and it's only used to add nesssary updates to increase performance and stability.
 
 ## Installing, Building, Attaching
 

@@ -1270,11 +1270,6 @@ static void set_imgui_theme(void) {
   style->Colors[ImGuiCol_ScrollbarGrabHovered] = cat_menu::k_accent;
 }
 
-static ImU32 cathook_watermark_rainbow_color() {
-  const float hue = std::fabs(std::sin(static_cast<float>(ImGui::GetTime()) / 2.0f));
-  return ImGui::ColorConvertFloat4ToU32(ImColor::HSV(hue, 0.85f, 0.90f, 1.0f));
-}
-
 static const char* cathook_watermark_version() {
 #if defined(GIT_COMMIT_HASH) && defined(GIT_COMMITTER_DATE)
   return "Version: #" GIT_COMMIT_HASH " " GIT_COMMITTER_DATE;
@@ -1309,15 +1304,13 @@ static void draw_watermark(void) {
   const float line_step = ImGui::GetFontSize() + 1.0f;
   float y = 8.0f;
 
-  draw_cathook_side_string(draw_list, y, cathook_watermark_rainbow_color(), "drunkhook");
+  draw_cathook_side_string(draw_list, y, IM_COL32(82, 126, 232, 255), "DrunkHook Beta");
   y += line_step;
-  draw_cathook_side_string(draw_list, y, IM_COL32(255, 255, 255, 255), cathook_watermark_version());
+  draw_cathook_side_string(draw_list, y, IM_COL32(82, 126, 232, 255), cathook_watermark_version());
   y += line_step;
-  draw_cathook_side_string(draw_list, y, IM_COL32(255, 255, 255, 255), cathook_watermark_type());
+  draw_cathook_side_string(draw_list, y, IM_COL32(82, 126, 232, 255), cathook_watermark_type());
   y += line_step;
-  draw_cathook_side_string(draw_list, y, IM_COL32(255, 255, 255, 255), "Press 'INSERT' key to open/close cheat menu.");
-  y += line_step;
-  draw_cathook_side_string(draw_list, y, IM_COL32(255, 255, 255, 255), "Use mouse to navigate in menu.");
+  draw_cathook_side_string(draw_list, y, IM_COL32(82, 126, 232, 255), "Press Insert or F11 to open/close menu.");
 }
 
 static void draw_aimbot_content() {
@@ -1632,10 +1625,6 @@ static void draw_visuals_tab() {
   ImGui::SameLine(0.0f, 0.0f);
   if (cat_menu::subtab_button("Glow", visuals_subtab == visuals_page_glow)) {
     visuals_subtab = visuals_page_glow;
-  }
-  ImGui::SameLine(0.0f, 0.0f);
-  if (cat_menu::subtab_button("UI", visuals_subtab == visuals_page_ui)) {
-    visuals_subtab = visuals_page_ui;
   }
   ImGui::SameLine(0.0f, 0.0f);
   if (cat_menu::subtab_button("World", visuals_subtab == visuals_page_world)) {
@@ -2265,7 +2254,6 @@ static void draw_exploits_content() {
   });
   cat_menu::flow_panel("Engine", 0, 118.0f, [&]() {
     cat_menu::checkbox("Bones optimization", &config.misc.exploits.setup_bones_optimization);
-    cat_menu::checkbox("Equip region unlock", &config.misc.exploits.equip_region_unlock);
     cat_menu::checkbox("Ping reducer", &config.misc.exploits.ping_reducer);
     cat_menu::slider_int("Ping target", &config.misc.exploits.ping_target, 1, 100);
   });
@@ -2352,7 +2340,6 @@ static void draw_misc_content() {
       cat_menu::slider_int("Fakelag ticks", &config.misc.exploits.fakelag_ticks, 1, 21);
       cat_menu::checkbox("Antiwarp", &config.misc.exploits.antiwarp);
       cat_menu::checkbox("Bones optimization", &config.misc.exploits.setup_bones_optimization);
-      cat_menu::checkbox("Equip region unlock", &config.misc.exploits.equip_region_unlock);
       cat_menu::checkbox("Ping reducer", &config.misc.exploits.ping_reducer);
       cat_menu::slider_int("Ping target", &config.misc.exploits.ping_target, 1, 100);
       cat_menu::checkbox("No engine sleep", &config.misc.exploits.no_engine_sleep);
