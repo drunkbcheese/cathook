@@ -8,7 +8,7 @@
 
 # BETA FORK WARNING
 
-This fork is used to actually not crash as often as pupnoodle inccreases updates. and it's only used to add nesssary updates to increase performance and stability.
+This fork is used incase of melody or pupnoodles updates crashes the game or lags the game too much. this fork is much more stable and doesn't crash upon loading different map.
 
 ## Installing, Building, Attaching
 
